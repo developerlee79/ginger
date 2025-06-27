@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>보유 제품 스캔 정보 - 진저</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            padding-bottom: 70px;
+        }
+
+        /* 헤더 스타일 */
+        .header {
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            position: sticky; /* 상단에 고정 */
+            top: 0;
+            z-index: 100; /* 다른 콘텐츠 위에 오도록 */
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .close-button {
+            font-size: 24px;
+            color: #555;
+            text-decoration: none;
+            padding: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            line-height: 1;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .product-image-section {
+            width: 100%;
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            padding: 20px 0;
+        }
+
+        .product-image {
+            width: 90%; /* 부모 컨테이너 너비의 90%를 차지하도록 설정하여 반응형으로 만듭니다. */
+            max-width: 300px; /* 이미지가 너무 커지지 않도록 최대 너비를 제한합니다. (원하는 값으로 조절 가능) */
+            height: auto; /* 이미지의 원래 비율을 유지하도록 높이를 자동으로 설정합니다. */
+            object-fit: contain; /* 오타 수정: 'contain'은 이미지의 종횡비를 유지하면서 내용 상자에 맞게 크기를 조절합니다. */
+            border-radius: 8px; /* 이미지를 둥근 모서리로 만듭니다. */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 그림자 효과를 추가합니다. */
+        }
+
+        /* 상품 정보 섹션 */
+        .product-info-section {
+            background-color: #fff;
+            padding: 20px;
+            margin: 15px auto; /* 중앙 정렬 */
+            max-width: 600px; /* 최대 너비 */
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .seller-info {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 10px;
+        }
+
+        .product-detail-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .rating {
+            color: #ffc107; /* 별점 색상 (노란색) */
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex; /* 별점과 리뷰 수 정렬 */
+            align-items: center;
+        }
+
+        .rating .stars {
+            margin-right: 5px;
+        }
+
+        .rating .review-count {
+            font-size: 14px;
+            color: #888;
+            line-height: 1; /* 텍스트 높이 조정 */
+        }
+
+        .price-section {
+            display: flex;
+            align-items: baseline; /* 텍스트 베이스라인 정렬 */
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .current-price {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ff7a2d; /* 진한 오렌지 */
+        }
+
+        .original-price {
+            font-size: 16px;
+            color: #888;
+            text-decoration: line-through;
+            margin-left: 10px;
+        }
+
+        .estimated-price-box {
+            background-color: #fff5e6; /* 연한 오렌지 배경 */
+            border: 1px solid #ffd7b3; /* 연한 오렌지 테두리 */
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .estimated-price-icon {
+            font-size: 28px;
+            color: #ff7a2d;
+            flex-shrink: 0; /* 아이콘 크기 고정 */
+        }
+
+        .estimated-price-details {
+            flex-grow: 1;
+        }
+
+        .estimated-price-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .estimated-price-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ff7a2d;
+            display: flex;
+            justify-content: space-between; /* 양쪽 끝으로 정렬 */
+            align-items: center;
+            width: 100%; /* 너비 100%로 설정 */
+        }
+
+        /* 하단 고정 버튼 컨테이너 */
+        .bottom-buttons {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #fff;
+            border-top: 1px solid #eee;
+            padding: 15px 20px;
+            display: flex;
+            gap: 15px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .add-to-cart-button,
+        .buy-now-button {
+            flex: 1;
+            padding: 15px 0;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .add-to-cart-button {
+            background-color: #f0f0f0; /* 밝은 회색 */
+            color: #555;
+        }
+
+        .add-to-cart-button:hover {
+            background-color: #e0e0e0;
+            transform: translateY(-2px);
+        }
+
+        .buy-now-button {
+            background-color: #ff7a2d; /* 진한 오렌지 */
+            color: white;
+        }
+
+        .buy-now-button:hover {
+            background-color: #e66a20;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 16px;
+            }
+
+            .product-detail-name {
+                font-size: 20px;
+            }
+
+            .current-price {
+                font-size: 24px;
+            }
+
+            .original-price {
+                font-size: 14px;
+            }
+
+            .estimated-price-box {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+
+            .estimated-price-value {
+                justify-content: center;
+            }
+
+            .add-to-cart-button,
+            .buy-now-button {
+                font-size: 16px;
+                padding: 12px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+<header class="header">
+    <div class="header-left">
+        <a href="javascript:history.back()" class="close-button">✕</a>
+    </div>
+</header>
+
+<section class="product-image-section">
+    <img src="https://m.media-amazon.com/images/I/51v-AsUg7JL._UF894,1000_QL80_.jpg"
+         alt="상품 이미지"
+         class="product-image"
+         onerror="this.onerror=null;this.src='https://placehold.co/180x180/E0E0E0/808080?text=이미지%20없음';">
+</section>
+
+<main style="max-width: 600px; margin: 20px auto; padding: 0 20px;">
+    <section class="product-info-section">
+        <p class="seller-info">Apple</p>
+        <h1 class="product-detail-name">MacBook Air M1 2020</h1>
+        <p style="padding-bottom: 3px; font-size: 15px; color: #666666">제품 코드 : A2337</p>
+        <p style="padding-bottom: 3px; font-size: 15px; color: #666666">시리얼 번호 : 30MNZZA071621</p>
+        <p style="margin-bottom: 20px; font-size: 15px; color: #666666">소비 전력 : 60W</p>
+
+        <div style="border: 2px solid #f0d6b6; border-radius: 16px; padding: 15px; width: 100%; background-color: white; color: black; position: relative;">
+                <div style="padding: 3px; font-size: 30px;"></div>
+                <div style="text-align: center; color: black; font-size: 20px;">
+                    🧑‍🍳 진저가 실제 총 사용 비용을 계산해봤어요.
+                </div>
+                <div style="display: flex; justify-content: space-around; align-items: center; margin-top: 30px;">
+                    <div style="font-size: 32px; color: #4caf50; font-weight: bold;">12,053원</div>
+                    <div style="font-size: 32px; color: #4caf50; font-weight: bold;">13,000원</div>
+                </div>
+
+                <div style="display: flex; justify-content: space-around; margin-top: 8px; color: #888; font-size: 14px;">
+                    <div>연간 전기요금</div>
+                    <div>제품 월 할부금</div>
+                </div>
+                <div style="text-align: center; margin-top: 20px; font-size: 14px; color: #999; text-decoration: underline; cursor: pointer;">
+                    계산기준 확인하기
+                </div>
+            </div>
+
+        <p style="margin-top: 20px; font-size: 14px; color: #555;">
+            이 제품은 최신 M4 Pro 칩을 탑재하여 뛰어난 성능을 자랑합니다. 512GB SSD는 빠른 부팅과 로딩 속도를 제공하며, 14인치 Liquid Retina XDR 디스플레이는 생생하고 선명한
+            화면을 선사합니다. 전문가용 소프트웨어 사용은 물론, 고해상도 비디오 편집, 3D 렌더링 등 고사양 작업에 최적화되어 있습니다. 오랜 배터리 사용 시간으로 이동 중에도 생산성을 유지할 수
+            있으며, 견고한 알루미늄 바디는 휴대성과 내구성을 동시에 만족시킵니다.
+        </p>
+        <p style="margin-top: 10px; font-size: 14px; color: #555;">
+            또한, Thunderbolt 4 포트, HDMI 포트, SDXC 카드 슬롯 등 다양한 연결 옵션을 제공하여 주변 기기와의 호환성이 뛰어납니다. 향상된 스피커 시스템과 스튜디오급 마이크는 최상의
+            오디오 경험을 제공합니다. Apple의 최신 macOS는 직관적인 사용자 인터페이스와 강력한 보안 기능을 제공하여 사용 편의성을 극대화합니다.
+        </p>
+
+    </section>
+</main>
+</body>
+</html>

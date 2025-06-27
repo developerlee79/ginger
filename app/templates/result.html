@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>검색 결과 - 진저</title>
+    <style>
+        /* 기본 스타일 재설정 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 폰트 및 배경 색상 설정 */
+        body {
+            font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f8f9fa; /* 연한 배경색으로 변경 */
+            color: #333;
+            /* 하단 내비게이션 바 공간 확보 */
+            padding-bottom: 70px; /* 내비게이션 바 높이보다 약간 크게 설정 */
+        }
+
+        /* Top Bar (시간, 통신사, 배터리) - From new design */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 15px;
+            font-size: 13px;
+            color: #000;
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+        }
+
+        .top-bar-left {
+            font-weight: bold;
+        }
+
+        .top-bar-right {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        /* Header - Merged with new design principles */
+        .header {
+            background-color: #fff; /* 배경색 흰색으로 변경 */
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* 약간의 그림자 */
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #ff7a2d; /* 진저 색상 */
+            font-size: 22px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .ginger-icon {
+            width: 28px;
+            height: 28px;
+            background-color: #ff7a2d;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: white;
+        }
+
+        .tagline {
+            font-size: 14px;
+            color: #555;
+            margin-left: 10px;
+            /* Original design had it, new design omits or moves it */
+            /* In search results, we might keep it or move it */
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .header-icon {
+            font-size: 22px;
+            color: #555;
+            text-decoration: none;
+        }
+
+        .nav-tabs {
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: flex-start;
+            padding: 0 20px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .nav-tab {
+            text-decoration: none;
+            color: #888;
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: color 0.2s, background-color 0.2s;
+        }
+
+        .nav-tab.active {
+            color: #ff7a2d;
+            background-color: #ffe6d9; /* 활성 탭 배경색 */
+        }
+
+        .nav-tab:hover {
+            color: #ff7a2d;
+        }
+
+        /* Back Link - Keep for search results page functionality */
+        .back-link {
+            display: inline-block;
+            margin: 20px 20px 0; /* Adjusted margin */
+            color: #ff7a2d;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Search Results Content */
+        .search-results {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 20px; /* Adjusted padding */
+        }
+
+        .search-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .search-keyword {
+            color: #ff7a2d; /* 진한 오렌지 */
+        }
+
+        /* AI 요약 섹션 */
+        .ai-summary {
+            background: linear-gradient(135deg, rgba(255, 154, 86, 0.1) 0%, rgba(255, 173, 115, 0.1) 100%); /* 연한 오렌지 배경 */
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 50px;
+            border-left: 4px solid #ff7a2d; /* 진한 오렌지 왼쪽 테두리 */
+        }
+
+        .ai-summary h2 {
+            font-size: 20px;
+            color: #ff7a2d;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ai-summary p {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.7;
+        }
+
+        /* 상품 없음 메시지 (조건부 렌더링) */
+        .no-products {
+            text-align: center;
+            padding: 60px 20px;
+            background-color: #f8f9fa;
+            border-radius: 15px;
+            margin-top: 40px;
+        }
+
+        .no-products h3 {
+            font-size: 22px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .no-products p {
+            font-size: 16px;
+            color: #888;
+            line-height: 1.6;
+        }
+
+        .development-notice {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 20px;
+            border-left: 4px solid #2196f3;
+        }
+
+        .development-notice h4 {
+            color: #1976d2;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .development-notice p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* Product Sort Section - Added for consistency with new design */
+        .product-sort-section {
+            padding: 15px 20px;
+            display: flex;
+            justify-content: flex-start; /* 좌측 정렬 */
+            align-items: center;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #eee;
+        }
+
+        .sort-dropdown {
+            border: 1px solid #ddd;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #555;
+            background-color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* 제품 목록 컨테이너 */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* 반응형 그리드 */
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        /* 개별 제품 카드 스타일 */
+        .product-card {
+            background-color: #fff;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); /* 부드러운 그림자 */
+            overflow: hidden;
+            text-decoration: none; /* 링크 밑줄 제거 */
+            color: inherit; /* 텍스트 색상 상속 */
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            cursor: pointer; /* Add cursor pointer to indicate clickability */
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px); /* 호버 시 약간 위로 이동 */
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); /* 호버 시 그림자 강조 */
+        }
+
+        /* 제품 이미지 컨테이너 */
+        .product-image-container {
+            width: 100%;
+            height: 180px; /* 고정 높이 */
+            overflow: hidden;
+            background-color: #f0f0f0; /* 이미지가 없을 때 배경색 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 이미지를 잘라내어 컨테이너에 맞게 채움 */
+            display: block; /* 이미지 아래 공백 제거 */
+        }
+
+        /* 이미지가 로드되지 않았을 때 대체 텍스트 표시 */
+        .product-image::before {
+            content: "이미지 없음";
+            display: block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #888;
+            font-size: 14px;
+        }
+
+        .product-content {
+            padding: 20px;
+            flex-grow: 1; /* 콘텐츠가 공간을 채우도록 */
+        }
+
+        .product-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .product-details p {
+            font-size: 15px;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        .product-details span {
+            font-weight: 600;
+            color: #ff7a2d; /* 진한 오렌지 */
+        }
+
+        .view-details-button {
+            display: block;
+            width: calc(100% - 40px); /* 패딩 제외하고 너비 조정 */
+            margin: 20px auto; /* 중앙 정렬 */
+            padding: 12px 20px;
+            background-color: #ff7a2d; /* 진한 오렌지 */
+            color: white;
+            text-align: center;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+        }
+
+        .view-details-button:hover {
+            background-color: #e66a20; /* 호버 시 더 진한 오렌지 */
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #f8f9fa;
+            padding: 40px 20px;
+            text-align: center;
+            color: #888;
+            font-size: 14px;
+            margin-top: 60px;
+        }
+
+        /* Mobile Navigation Bar */
+        .mobile-nav-bar {
+            position: fixed; /* 화면 하단에 고정 */
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px; /* 내비게이션 바 높이 */
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-around; /* 아이템들을 균등하게 배치 */
+            align-items: center;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1); /* 상단 그림자 */
+            z-index: 1000; /* 다른 콘텐츠 위에 오도록 */
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1; /* 공간을 균등하게 차지 */
+            text-decoration: none;
+            color: #888; /* 기본 아이콘/텍스트 색상 */
+            font-size: 12px;
+            padding: 5px 0;
+            transition: color 0.2s ease-in-out;
+        }
+
+        .nav-item:hover {
+            color: #ff7a2d; /* 호버 시 오렌지색 */
+        }
+
+        .nav-item.active {
+            color: #ff7a2d; /* 활성 아이템 오렌지색 */
+            font-weight: bold;
+        }
+
+        .nav-icon {
+            font-size: 24px; /* 아이콘 크기 */
+            margin-bottom: 4px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header {
+                padding: 10px 15px; /* 모바일 헤더 패딩 줄임 */
+            }
+
+            .header-top { /* This was from the old header, removed in the new structure */
+                flex-direction: row; /* Ensure horizontal alignment if it ever appears */
+                justify-content: space-between;
+                margin-bottom: 0;
+                padding: 0;
+            }
+
+            .logo {
+                font-size: 20px;
+            }
+
+            .ginger-icon {
+                width: 24px;
+                height: 24px;
+                font-size: 14px;
+            }
+
+            .tagline {
+                display: none; /* 모바일에서 태그라인 숨김 */
+            }
+
+            .header-icons {
+                gap: 10px;
+            }
+
+            .header-icon {
+                font-size: 20px;
+            }
+
+            .ai-summary {
+                padding: 20px;
+            }
+
+            .search-title {
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+
+            .search-results {
+                padding: 20px 15px; /* Adjusted padding for mobile */
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr; /* 모바일에서는 한 줄에 하나씩 */
+                gap: 20px; /* Adjusted gap */
+            }
+
+            .product-image-container {
+                height: 150px; /* Adjusted image height for mobile */
+            }
+
+            .product-content {
+                padding: 15px; /* Adjusted padding */
+            }
+
+            .product-name {
+                font-size: 16px;
+                margin-bottom: 8px;
+            }
+
+            .product-details p {
+                font-size: 14px;
+            }
+
+            .view-details-button {
+                width: calc(100% - 30px); /* Adjusted width */
+                margin: 15px auto;
+                padding: 10px 15px;
+                font-size: 15px;
+            }
+        }
+
+        /* Styles for search bar and icons in the header (from new design) */
+        .header-main-search-bar {
+            display: flex;
+            align-items: center;
+            background-color: #fff; /* 흰색 배경 */
+            padding: 10px 20px; /* 패딩 조정 */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* 약간의 그림자 */
+            border-bottom: 1px solid #eee; /* 하단 선 */
+        }
+
+        .header-main-search-input {
+            flex-grow: 1; /* 최대한 공간 차지 */
+            padding: 10px 15px;
+            border: 1px solid #ddd; /* 테두리 */
+            border-radius: 20px; /* 둥근 모서리 */
+            font-size: 15px;
+            outline: none;
+            margin-right: 10px; /* 검색 아이콘과의 간격 */
+            background-color: #f5f5f5; /* 연한 회색 배경 */
+        }
+
+        .header-main-search-icon,
+        .header-main-cart-icon {
+            font-size: 22px;
+            color: #555;
+            margin-left: 5px; /* 아이콘 간격 */
+        }
+
+        .azure-powered {
+            font-size: 12px;
+            color: #999;
+            text-align: right;
+            margin-top: 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="header-left">
+        <a href="#" class="logo">
+            <div class="ginger-icon">
+                🍪
+            </div>
+            진저
+        </a>
+        <div class="tagline" >소비자를 위한 <p style="color: orange; float: right; margin-left: 4px;">진짜 최저가</p></div>
+    </div>
+</header>
+
+<nav class="nav-tabs">
+    <a href="#" class="nav-tab">절약제품</a>
+    <a href="#" class="nav-tab active">추천</a>
+    <a href="#" class="nav-tab">소형가전</a>
+    <a href="#" class="nav-tab">대형가전</a>
+    <a href="#" class="nav-tab">노트북</a>
+    <a href="#" class="nav-tab">태블릿</a>
+</nav>
+
+<div class="header-main-search-bar">
+    <form action="/result" method="POST" style="display: flex; flex-grow: 1;">
+        <input
+                type="text"
+                name="content"
+                placeholder="상품명 검색 또는 원하는 조건 입력"
+                class="header-main-search-input"
+                value="{{ content }}" {# Pre-fill search input with current search term #}
+        />
+        <button type="submit" style="display: none;"></button>
+        {# Hidden submit button, search handled by icon #}
+    </form>
+</div>
+
+<main class="search-results">
+    <h1 class="search-title">검색어: <span class="search-keyword">{{ content }}</span></h1>
+
+    <section class="product-sort-section">
+        <div class="sort-dropdown">
+            추천순 <span style="margin-left: 5px;">▼</span>
+        </div>
+    </section>
+
+    <section class="products-section">
+        {% if products %}
+        <div class="products-grid">
+            {% for product in products %}
+            <a href="/detail/{{ product.id }}" class="product-card">
+                <div class="product-image-container">
+                    <img src="{{ product.model_image_url | default('https://placehold.co/180x180/E0E0E0/808080?text=No+Image') }}"
+                         alt="{{ product.model_name }} 이미지"
+                         class="product-image"
+                         onerror="this.onerror=null;this.src='https://placehold.co/180x180/E0E0E0/808080?text=이미지%20없음';">
+                </div>
+                <div class="product-content">
+                    <h3 class="product-name">{{ product.model_name }}</h3>
+                    <div class="product-details">
+                        <p><span>제품 가격:</span> {{ product.price }}</p>
+                        <p><span>사용 비용:</span> {{ product.electricity_bill }}</p>
+                    </div>
+                </div>
+                <button class="view-details-button">자세히 보기</button>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-products">
+            <h3>{{ content }} 상품 준비 중입니다</h3>
+            <p>
+                현재 {{ content }} 관련 상품을 준비하고 있습니다.<br/>
+                곧 진저만의 특별한 '진짜 최저가' {{ content }}을 만나보실 수 있습니다.
+            </p>
+
+            <div class="development-notice">
+                <h4>개발 상태</h4>
+                <p>
+                    상품 데이터베이스 및 가격 계산 알고리즘을 개발 중입니다. 빠른
+                    시일 내에 서비스를 제공할 예정입니다.
+                </p>
+            </div>
+        </div>
+        {% endif %}
+    </section>
+</main>
+
+<footer class="footer">
+    <p>Powered by Azure AI</p>
+</footer>
+
+<nav class="mobile-nav-bar">
+    <a href="#" class="nav-item active">
+        <span class="nav-icon">🏠</span>
+        <span>홈</span>
+    </a>
+    <a href="#" class="nav-item">
+        <span class="nav-icon">❤️</span>
+        <span>관심</span>
+    </a>
+    <a href="/detail-scan" style="text-decoration: none" class="nav-item">
+        <input type="file" id="imageInput" accept="image/*" capture="environment" style="display: none;" />
+        <span class="nav-icon" id="cameraButton">📷</span>
+        <span>내 기기 찾기</span>
+    </a>
+    <a href="#" class="nav-item">
+        <span class="nav-icon">👤</span>
+        <span>MY</span>
+    </a>
+</nav>
+</body>
+</html>

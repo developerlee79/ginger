@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>진저 - 당신을 위한 진짜 최저가</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            padding-bottom: 70px;
+        }
+
+        .header {
+            background-color: #fff;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #ff7a2d;
+            font-size: 20px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .ginger-icon {
+            width: 14px;
+            height: 14px;
+            background-color: #ff7a2d;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: white;
+        }
+
+        .tagline {
+            font-size: 15px;
+            color: #666;
+            margin-left: 5px;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .header-icon {
+            font-size: 20px;
+            color: #666;
+            text-decoration: none;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: flex-start;
+            padding: 0 20px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .nav-tab {
+            text-decoration: none;
+            color: #666;
+            font-weight: 500;
+            padding: 12px 16px;
+            border-bottom: 2px solid transparent;
+            transition: color 0.2s, border-color 0.2s;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .nav-tab.active {
+            color: #ff7a2d;
+            border-bottom-color: #ff7a2d;
+            font-weight: 600;
+        }
+
+        .nav-tab:hover {
+            color: #ff7a2d;
+        }
+
+        /* AI Recommendation Section */
+        .ai-recommendation-section {
+            background: linear-gradient(135deg, #fff4e6 0%, #ffe6d9 100%);
+            padding: 25px 20px;
+            text-align: center;
+            margin: 0;
+        }
+
+        .ai-recommendation-text {
+            font-size: 15px;
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        /* Search Form Styling */
+        .search-form-main {
+            display: flex;
+            width: 100%;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .search-input-main {
+            flex-grow: 1;
+            padding: 14px 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #333;
+            background-color: #fff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .search-input-main::placeholder {
+            color: #999;
+        }
+
+        .search-button-main {
+            display: none;
+        }
+
+        .azure-powered {
+            font-size: 11px;
+            color: #999;
+            text-align: right;
+            margin-top: 8px;
+        }
+
+        /* Product Sort Section */
+        .product-sort-section {
+            padding: 12px 20px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #eee;
+        }
+
+        .sort-dropdown {
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            border-radius: 18px;
+            font-size: 13px;
+            color: #666;
+            background-color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .product-section {
+            padding: 15px 20px;
+            background-color: #f8f9fa;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .product-card {
+            background-color: white;
+            border-radius: 13px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+            text-align: left;
+            float: left;
+            width: 100%;
+        }
+
+        .product-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background-color: #fafafa;
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .product-info {
+            padding: 12px;
+        }
+
+        .product-name {
+            font-weight: 600;
+            font-size: 25px;
+            margin-bottom: 8px;
+            color: black;
+            line-height: 1.3;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .product-details {
+            margin-bottom: 4px;
+        }
+
+        .product-price-actual {
+            font-size: 20px;
+            color: #ff4444;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .product-price-plus {
+            font-size: 18px;
+            color: green;
+        }
+
+        .product-price-estimated {
+            font-size: 13px;
+            color: #999;
+            margin-top: 2px;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #888;
+            font-size: 12px;
+        }
+
+        /* 모바일 내비게이션 바 스타일 */
+        .mobile-nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.08);
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            text-decoration: none;
+            color: #888;
+            font-size: 10px;
+            padding: 5px 0;
+            transition: color 0.2s ease-in-out;
+        }
+
+        .nav-item:hover {
+            color: #ff7a2d;
+        }
+
+        .nav-item.active {
+            color: #ff7a2d;
+            font-weight: bold;
+        }
+
+        .nav-icon {
+            font-size: 18px;
+            margin-bottom: 2px;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 10px 15px;
+            }
+
+            .logo {
+                font-size: 18px;
+            }
+
+            .ginger-icon {
+                width: 22px;
+                height: 22px;
+                font-size: 12px;
+            }
+
+            .tagline {
+                width: 180px;
+                font-size: 16px;
+                text-align: center;
+                vertical-align: center;
+                color: black;
+            }
+
+            .header-icons {
+                gap: 12px;
+            }
+
+            .header-icon {
+                font-size: 18px;
+            }
+
+            .nav-tabs {
+                padding: 0 15px;
+            }
+
+            .nav-tab {
+                padding: 10px 12px;
+                font-size: 13px;
+            }
+
+            .ai-recommendation-section {
+                padding: 20px 15px;
+            }
+
+            .ai-recommendation-text {
+                font-size: 14px;
+                margin-bottom: 18px;
+            }
+
+            .search-input-main {
+                padding: 12px 14px;
+                font-size: 13px;
+            }
+
+            .product-section {
+                padding: 12px 15px;
+            }
+
+            .product-grid {
+                gap: 10px;
+            }
+
+            .product-image {
+                height: 110px;
+                padding: 10px;
+            }
+
+            .product-info {
+                padding: 10px;
+            }
+
+            .product-name {
+                font-size: 16px;
+            }
+
+            .product-compare {
+                font-size: 12px;
+                color: #666666;
+            }
+
+            .product-price-actual {
+                font-size: 16px;
+            }
+
+            .product-price-plus {
+                font-size: 15px;
+            }
+
+            .product-price-estimated {
+                margin-top: 5px;
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+<header class="header">
+    <div class="header-left">
+        <a href="#" class="logo">
+            <div class="ginger-icon">
+                🍪
+            </div>
+            진저
+        </a>
+        <div class="tagline" >소비자를 위한 <p style="color: orange; float: right; margin-left: 4px;">진짜 최저가</p></div>
+    </div>
+</header>
+
+<nav class="nav-tabs">
+    <a href="#" class="nav-tab">절약제품</a>
+    <a href="#" class="nav-tab active">추천</a>
+    <a href="#" class="nav-tab">소형가전</a>
+    <a href="#" class="nav-tab">대형가전</a>
+    <a href="#" class="nav-tab">노트북</a>
+    <a href="#" class="nav-tab">태블릿</a>
+</nav>
+
+<main class="ai-recommendation-section">
+    <p class="ai-recommendation-text">
+        "1인 가구가 오래 쓸 수 있는 10만원 이하 청소기"와<br>
+        같이 검색해보세요
+    </p>
+    <form action="/result" method="post" class="search-form-main">
+        <input
+                type="text"
+                name="content"
+                placeholder="상품명 검색 또는 원하는 조건 입력"
+                class="search-input-main"
+                style="text-align: center"
+        />
+        <button type="submit" class="search-button-main">검색</button>
+    </form>
+    <p class="azure-powered" style="text-align: center">Powered By Azure AI</p>
+</main>
+
+<section class="product-sort-section">
+    <div class="sort-dropdown">
+        추천순 <span style="margin-left: 5px;">▼</span>
+    </div>
+</section>
+
+<section class="product-section">
+    <div class="product-grid">
+        <div class="product-card">
+            <a href="/detail/1" style="text-decoration: none">
+                <img src="https://thumbnail7.coupangcdn.com/thumbnails/remote/492x492ex/image/retail/images/551708569399125-19e37109-9add-4820-947b-1b5a69b03cd3.jpg"
+                 alt="더함 262L 2도어 냉장고" class="product-image"/>
+                <div class="product-info">
+                    <p class="product-name">더함 262L 2도어 냉장고</p>
+                    <p class="product-compare">
+                        <span>가격</span>
+                        <span style="padding-left: 64px;">유지비/1년</span>
+                    </p>
+                    <p class="product-details">
+                        <span class="product-price-actual">560,300원</span>
+                        <span style="color: #666666; font-size: 17px;">+</span>
+                        <span class="product-price-plus">93,760원</span>
+                    </p>
+                    <p class="product-price-estimated">예상 실가격 654,060원</p>
+                </div>
+            </a>
+        </div>
+
+        <div class="product-card">
+            <img src="https://thumbnail6.coupangcdn.com/thumbnails/remote/492x492ex/image/retail/images/13428090690724074-0bd34234-f1de-4141-aa99-f95e1d69aafb.jpg"
+                 alt="쿠잉전자 메탈 콤비 117L 2도어 냉장고" class="product-image"/>
+            <div class="product-info">
+                <p class="product-name">쿠잉전자 메탈 콤비 117L 2도어 냉장고</p>
+                <p class="product-compare">
+                    <span>가격</span>
+                    <span style="padding-left: 64px;">유지비/1년</span>
+                </p>
+                <p class="product-details">
+                    <span class="product-price-actual">402,300원</span>
+                    <span style="color: #666666; font-size: 17px;">+</span>
+                    <span class="product-price-plus">63,760원</span>
+                </p>
+                <p class="product-price-estimated">예상 실가격 466,060원</p>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <img src="https://img.danawa.com/prod_img/500000/590/134/img/6134590_1.jpg?_v=20250108125103&shrink=360:360"
+                 alt="테팔 에어포스 라이트 스틱 무선 청소기" class="product-image"/>
+            <div class="product-info">
+                <p class="product-name">테팔 에어포스 라이트 스틱 무선 청소기</p>
+                <p class="product-compare">
+                    <span>가격</span>
+                    <span style="padding-left: 64px;">유지비/1년</span>
+                </p>
+                <p class="product-details">
+                    <span class="product-price-actual">70,300원</span>
+                    <span style="color: #666666; font-size: 17px;">+</span>
+                    <span class="product-price-plus">53,760원</span>
+                </p>
+                <p class="product-price-estimated">예상 실가격 124,060원</p>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <img src="https://thumbnail7.coupangcdn.com/thumbnails/remote/492x492ex/image/vendor_inventory/6218/c37c8c5c29eddf29b7da7efed7f105f82c10069df0ba999140a5c4c4ab6f.png"
+                 alt="홈리아 유선 청소기 초강력 진공 핸디 스틱형 다용도" class="product-image"/>
+            <div class="product-info">
+                <p class="product-name">홈리아 유선 청소기 초강력 진공 핸디 스틱형 다용도</p>
+                <p class="product-compare">
+                    <span>가격</span>
+                    <span style="padding-left: 64px;">유지비/1년</span>
+                </p>
+                <p class="product-details">
+                    <span class="product-price-actual">80,300원</span>
+                    <span style="color: #666666; font-size: 17px;">+</span>
+                    <span class="product-price-plus">53,760원</span>
+                </p>
+                <p class="product-price-estimated">예상 실가격 134,060원</p>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <img src="https://contents.kyobobook.co.kr/sih/fit-in/400x0/gift/pdt/1104/hot1709873927270.jpg"
+                 alt="신일 무선청소기" class="product-image"/>
+            <div class="product-info">
+                <p class="product-name">신일 무선청소기</p>
+                <p class="product-compare">
+                    <span>가격</span>
+                    <span style="padding-left: 64px;">유지비/1년</span>
+                </p>
+                <p class="product-details">
+                    <span class="product-price-actual">35,300원</span>
+                    <span style="color: #666666; font-size: 17px;">+</span>
+                    <span class="product-price-plus">13,760원</span>
+                </p>
+                <p class="product-price-estimated">예상 실가격 48,060원</p>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <img src="https://image2.lotteimall.com/goods/01/27/48/2139482701_1.jpg/dims/resizemc/550x550/optimize"
+                 alt="블랙앤데커 무선 핸디진공 먼지제거기" class="product-image"/>
+            <div class="product-info">
+                <p class="product-name">블랙앤데커 무선 핸디진공 먼지제거기</p>
+                <p class="product-compare">
+                    <span>가격</span>
+                    <span style="padding-left: 64px;">유지비/1년</span>
+                </p>
+                <p class="product-details">
+                    <span class="product-price-actual">120,300원</span>
+                    <span style="color: #666666; font-size: 17px;">+</span>
+                    <span class="product-price-plus">23,760원</span>
+                </p>
+                <p class="product-price-estimated">예상 실가격 144,060원</p>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <img src="https://cdn.011st.com/11dims/resize/1000x1000/quality/75/11src/product/7286481055/B.jpg?810632872"
+                 alt="이브이 32인치 81cm LED HD TV" class="product-image"/>
+            <div class="product-info">
+                <p class="product-name">이브이 32인치 81cm LED HD TV</p>
+                <p class="product-compare">
+                    <span>가격</span>
+                    <span style="padding-left: 64px;">유지비/1년</span>
+                </p>
+                <p class="product-details">
+                    <span class="product-price-actual">456,300원</span>
+                    <span style="color: #666666; font-size: 17px;">+</span>
+                    <span class="product-price-plus">43,760원</span>
+                </p>
+                <p class="product-price-estimated">예상 실가격 494,060원</p>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <img src="https://thumbnail7.coupangcdn.com/thumbnails/remote/492x492ex/image/vendor_inventory/8222/2a2463f7ccdcc969192454d66aed93b68ab813e92ac65df2428d7bfb7e71.jpg"
+                 alt="로퍼 전자동 통돌이 세탁기" class="product-image"/>
+            <div class="product-info">
+                <p class="product-name">로퍼 전자동 통돌이 세탁기</p>
+                <p class="product-compare">
+                    <span>가격</span>
+                    <span style="padding-left: 64px;">유지비/1년</span>
+                </p>
+                <p class="product-details">
+                    <span class="product-price-actual">100,300원</span>
+                    <span style="color: #666666; font-size: 17px;">+</span>
+                    <span class="product-price-plus">63,760원</span>
+                </p>
+                <p class="product-price-estimated">예상 실가격 164,060원</p>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    document.getElementById('cameraButton').addEventListener('click', () => {
+      document.getElementById('imageInput').click();
+    });
+
+    document.getElementById('imageInput').addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        console.log('선택된 파일:', file);
+      }
+    });
+</script>
+<nav class="mobile-nav-bar">
+    <a href="#" class="nav-item active">
+        <span class="nav-icon">🏠</span>
+        <span>홈</span>
+    </a>
+    <a href="#" class="nav-item">
+        <span class="nav-icon">❤️</span>
+        <span>관심</span>
+    </a>
+    <a href="/detail-scan" style="text-decoration: none" class="nav-item">
+        <input type="file" id="imageInput" accept="image/*" capture="environment" style="display: none;" />
+        <span class="nav-icon" id="cameraButton">📷</span>
+        <span>내 기기 찾기</span>
+    </a>
+    <a href="#" class="nav-item">
+        <span class="nav-icon">👤</span>
+        <span>MY</span>
+    </a>
+</nav>
+</body>
+</html>

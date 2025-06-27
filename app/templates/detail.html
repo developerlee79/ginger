@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>MacBook Pro 14-inch 상세 정보 - 진저</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            padding-bottom: 70px;
+        }
+
+        /* 헤더 스타일 */
+        .header {
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            position: sticky; /* 상단에 고정 */
+            top: 0;
+            z-index: 100; /* 다른 콘텐츠 위에 오도록 */
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .close-button {
+            font-size: 24px;
+            color: #555;
+            text-decoration: none;
+            padding: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            line-height: 1;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .product-image-section {
+            width: 100%;
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            padding: 20px 0;
+        }
+
+        .product-image {
+            width: 90%; /* 부모 컨테이너 너비의 90%를 차지하도록 설정하여 반응형으로 만듭니다. */
+            max-width: 300px; /* 이미지가 너무 커지지 않도록 최대 너비를 제한합니다. (원하는 값으로 조절 가능) */
+            height: auto; /* 이미지의 원래 비율을 유지하도록 높이를 자동으로 설정합니다. */
+            object-fit: contain; /* 오타 수정: 'contain'은 이미지의 종횡비를 유지하면서 내용 상자에 맞게 크기를 조절합니다. */
+            border-radius: 8px; /* 이미지를 둥근 모서리로 만듭니다. */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 그림자 효과를 추가합니다. */
+        }
+
+        /* 상품 정보 섹션 */
+        .product-info-section {
+            background-color: #fff;
+            padding: 20px;
+            margin: 15px auto; /* 중앙 정렬 */
+            max-width: 600px; /* 최대 너비 */
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .seller-info {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 10px;
+            margin-left: 2px;
+        }
+
+        .product-detail-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .rating {
+            color: #ffc107; /* 별점 색상 (노란색) */
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex; /* 별점과 리뷰 수 정렬 */
+            align-items: center;
+        }
+
+        .rating .stars {
+            margin-right: 5px;
+        }
+
+        .rating .review-count {
+            font-size: 14px;
+            color: #888;
+            line-height: 1; /* 텍스트 높이 조정 */
+        }
+
+        .price-section {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+        }
+
+        .current-price {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ff7a2d; /* 진한 오렌지 */
+        }
+
+        .original-price {
+            font-size: 16px;
+            color: #888;
+            text-decoration: line-through;
+            margin-left: 10px;
+        }
+
+        .expected-price { /* 현재 이미지에선 사용되지 않음 */
+            font-size: 14px;
+            color: #666;
+        }
+
+        .bottom-buttons {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #fff;
+            border-top: 1px solid #eee;
+            padding: 15px 20px;
+            display: flex;
+            gap: 15px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .add-to-cart-button,
+        .buy-now-button {
+            flex: 1;
+            padding: 15px 0;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .add-to-cart-button {
+            background-color: #f0f0f0; /* 밝은 회색 */
+            color: #555;
+        }
+
+        .add-to-cart-button:hover {
+            background-color: #e0e0e0;
+            transform: translateY(-2px);
+        }
+
+        .buy-now-button {
+            background-color: #ff7a2d; /* 진한 오렌지 */
+            color: white;
+        }
+
+        .buy-now-button:hover {
+            background-color: #e66a20;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 16px;
+            }
+
+            .product-detail-name {
+                font-size: 20px;
+            }
+
+            .current-price {
+                font-size: 24px;
+            }
+
+            .original-price {
+                font-size: 14px;
+            }
+
+            .estimated-price-box {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+
+            .estimated-price-value {
+                justify-content: center;
+            }
+
+            .add-to-cart-button,
+            .buy-now-button {
+                font-size: 16px;
+                padding: 12px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+<header class="header">
+    <div class="header-left">
+        <a href="javascript:history.back()" class="close-button">✕</a>
+    </div>
+</header>
+
+<section class="product-image-section">
+    <img src="https://thumbnail7.coupangcdn.com/thumbnails/remote/492x492ex/image/retail/images/551708569399125-19e37109-9add-4820-947b-1b5a69b03cd3.jpg"
+         alt="상품 이미지"
+         class="product-image"
+         onerror="this.onerror=null;this.src='https://placehold.co/180x180/E0E0E0/808080?text=이미지%20없음';">
+</section>
+
+<main style="max-width: 600px; margin: 20px auto; padding: 0 20px;">
+    <section class="product-info-section">
+        <p class="seller-info">더함</p>
+        <h1 class="product-detail-name">더함 262L 2도어 냉장고</h1>
+        <div class="rating">
+            <span class="stars">⭐⭐⭐⭐⭐</span>
+            <span class="review-count">(1,231)</span>
+        </div>
+
+        <div class="price-section">
+            <div>
+                <span class="current-price">560,300</span>
+                <span class="original-price">630,000</span>
+            </div>
+        </div>
+
+        <div style="border: 2px solid #f0d6b6; border-radius: 16px; padding: 15px; width: 100%; background-color: white; color: black; position: relative;">
+                <div style="padding: 3px; font-size: 30px;"></div>
+                <div style="text-align: center; color: black; font-size: 20px;">
+                    🧑‍🍳 진저가 실제 총 사용 비용을 계산해봤어요.
+                </div>
+                <div style="display: flex; justify-content: space-around; align-items: center; margin-top: 30px;">
+                    <div style="font-size: 32px; color: #4caf50; font-weight: bold;">83,750원</div>
+                    <div style="font-size: 32px; color: #4caf50; font-weight: bold;">10,000원</div>
+                </div>
+
+                <div style="display: flex; justify-content: space-around; margin-top: 8px; color: #888; font-size: 14px;">
+                    <div>연간 전기요금</div>
+                    <div>제품 월 할부금</div>
+                </div>
+                <div style="text-align: center; margin-top: 20px; font-size: 14px; color: #999; text-decoration: underline; cursor: pointer;">
+                    계산기준 확인하기
+                </div>
+            </div>
+
+        <p style="margin-top: 20px; font-size: 14px; color: #555;">
+            더함 262L 2도어 냉장고는 1~2인 가구나 원룸, 오피스 등 제한된 공간에 적합한 슬림형 냉장고다. 총 용량은 냉장실 187L, 냉동실 75L로 일상적인 식재료 보관에 충분하며, 직접 냉각
+            방식으로 안정적인 온도를 유지한다. 외관은 메탈 실버 또는 강화유리 화이트 도어 중 선택할 수 있어 인테리어와의 조화도 고려할 수 있다.
+        </p>
+        <p style="margin-top: 10px; font-size: 14px; color: #555;">
+            내부는 높이 조절이 가능한 유리 선반과 달걀 전용 트레이, 서랍형 야채실 등 실용적인 수납 구성이 특징이다. 히든 핸들 디자인으로 깔끔한 인상을 주며, 저소음 설계와 친환경 냉매(R600a)
+            사용으로 에너지 효율성과 환경까지 고려했다. 에너지 소비효율 등급은 3등급으로 월간 소비 전력은 약 33.7kWh 수준이다. </p>
+        <p style="margin-top: 10px; font-size: 14px; color: #555;">
+            가격대는 50만 원대 중후반으로 합리적인 편이며, 온라인에서는 다양한 설치 옵션과 렌탈 서비스도 제공되고 있다. 적당한 용량과 군더더기 없는 기능 구성을 갖춘 이 모델은 실용성과 디자인을 모두
+            원하는 소비자에게 적합한 선택지다. </p>
+        <p style="margin-top: 10px; font-size: 14px; color: #555;">
+            배송 정보: 주문 후 2-3영업일 이내 배송됩니다. 제주 및 도서산간 지역은 추가 배송비가 발생할 수 있습니다.
+        </p>
+        <p style="margin-top: 10px; font-size: 14px; color: #555;">
+            환불 및 교환: 제품 수령 후 7일 이내에 가능하며, 제품에 하자가 있거나 오배송된 경우에 한합니다. 고객 변심에 의한 반품 시 왕복 배송비가 부과될 수 있습니다.
+        </p>
+        <p style="margin-top: 10px; font-size: 14px; color: #555;">
+            고객 지원: 24시간 온라인 채팅 지원 및 전화 상담 (평일 9:00 - 18:00)을 제공합니다.
+        </p>
+    </section>
+</main>
+
+<div class="bottom-buttons">
+    <button class="add-to-cart-button">장바구니 담기</button>
+    <button class="buy-now-button">바로구매</button>
+</div>
+</body>
+</html>
