@@ -17,6 +17,8 @@
 
 ## 시스템 아키텍쳐
 
+<img width="742" alt="아키텍처" src="https://github.com/user-attachments/assets/f59fea3c-3c15-486e-8631-06ad087d01cf" />
+
 - BackEnd : Python, FastAPI
 - FrontEnd : Jinja, Html, CSS, Javascript
 - Database : Azure Database for MySQL, Azure Blob Storage
